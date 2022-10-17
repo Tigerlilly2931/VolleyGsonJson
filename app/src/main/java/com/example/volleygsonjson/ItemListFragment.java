@@ -1,7 +1,9 @@
 package com.example.volleygsonjson;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipDescription;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -10,17 +12,29 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.volleygsonjson.databinding.FragmentItemListBinding;
 import com.example.volleygsonjson.databinding.ItemListContentBinding;
 
 import com.example.volleygsonjson.placeholder.PlaceholderContent;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -34,13 +48,15 @@ import java.util.List;
  */
 public class ItemListFragment extends Fragment {
 
+    //Resources res = this.getResources();
+
     /**
      * Method to intercept global key events in the
      * item list fragment to trigger keyboard shortcuts
      * Currently provides a toast when Ctrl + Z and Ctrl + F
      * are triggered
      */
-    ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
+    /**ViewCompat.OnUnhandledKeyEventListenerCompat unhandledKeyEventListenerCompat = (v, event) -> {
         if (event.getKeyCode() == KeyEvent.KEYCODE_Z && event.isCtrlPressed()) {
             Toast.makeText(
                     v.getContext(),
@@ -57,9 +73,13 @@ public class ItemListFragment extends Fragment {
             return true;
         }
         return false;
-    };
+    };*/
 
     private FragmentItemListBinding binding;
+
+    //need to make a new java class that handles the construction of the things
+    private static VolleyContent volleyContent = new VolleyContent();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +93,7 @@ public class ItemListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
+        //ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
 
         RecyclerView recyclerView = binding.itemList;
 
@@ -84,13 +104,15 @@ public class ItemListFragment extends Fragment {
         setupRecyclerView(recyclerView, itemDetailFragmentContainer);
     }
 
-    private void setupRecyclerView(
+    public void setupRecyclerView(
             RecyclerView recyclerView,
             View itemDetailFragmentContainer
     ) {
 
+        volleyContent.testAllThatJazzes(getActivity());
+        volleyContent.createVolleyStuff();
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
-                PlaceholderContent.ITEMS,
+                volleyContent.JSONSTUFFS,
                 itemDetailFragmentContainer
         ));
     }
@@ -104,10 +126,16 @@ public class ItemListFragment extends Fragment {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<PlaceholderContent.PlaceholderItem> mValues;
+        private final List<VolleyModel> mValues;
         private final View mItemDetailFragmentContainer;
 
-        SimpleItemRecyclerViewAdapter(List<PlaceholderContent.PlaceholderItem> items,
+        public void clear(){
+            int size = mValues.size();
+            mValues.clear();
+            notifyItemRangeRemoved(0, size);
+        }
+
+        SimpleItemRecyclerViewAdapter(List<VolleyModel> items,
                                       View itemDetailFragmentContainer) {
             mValues = items;
             mItemDetailFragmentContainer = itemDetailFragmentContainer;
@@ -124,66 +152,24 @@ public class ItemListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            //holder.volleyItem = mValues.get(position);
+            holder.mIdView.setText(mValues.get(position).getmName());
+            //holder.mContentView.setText(mValues.get(position).getmConsole());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(itemView -> {
-                PlaceholderContent.PlaceholderItem item =
-                        (PlaceholderContent.PlaceholderItem) itemView.getTag();
                 Bundle arguments = new Bundle();
-                arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
+                arguments.putString(ItemDetailFragment.ARG_ITEM_ID, mValues.get(position).getmName());
                 if (mItemDetailFragmentContainer != null) {
                     Navigation.findNavController(mItemDetailFragmentContainer)
                             .navigate(R.id.fragment_item_detail, arguments);
                 } else {
                     Navigation.findNavController(itemView).navigate(R.id.show_item_detail, arguments);
                 }
+                clear();
             });
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                /*
-                 * Context click listener to handle Right click events
-                 * from mice and trackpad input to provide a more native
-                 * experience on larger screen devices
-                 */
-                holder.itemView.setOnContextClickListener(v -> {
-                    PlaceholderContent.PlaceholderItem item =
-                            (PlaceholderContent.PlaceholderItem) holder.itemView.getTag();
-                    Toast.makeText(
-                            holder.itemView.getContext(),
-                            "Context click of item " + item.id,
-                            Toast.LENGTH_LONG
-                    ).show();
-                    return true;
-                });
-            }
-            holder.itemView.setOnLongClickListener(v -> {
-                // Setting the item id as the clip data so that the drop target is able to
-                // identify the id of the content
-                ClipData.Item clipItem = new ClipData.Item(mValues.get(position).id);
-                ClipData dragData = new ClipData(
-                        ((PlaceholderContent.PlaceholderItem) v.getTag()).content,
-                        new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
-                        clipItem
-                );
 
-                if (Build.VERSION.SDK_INT >= 24) {
-                    v.startDragAndDrop(
-                            dragData,
-                            new View.DragShadowBuilder(v),
-                            null,
-                            0
-                    );
-                } else {
-                    v.startDrag(
-                            dragData,
-                            new View.DragShadowBuilder(v),
-                            null,
-                            0
-                    );
-                }
-                return true;
-            });
+
         }
 
         @Override
@@ -194,6 +180,7 @@ public class ItemListFragment extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mContentView;
+            //public VolleyModel volleyItem;
 
             ViewHolder(ItemListContentBinding binding) {
                 super(binding.getRoot());
@@ -203,4 +190,8 @@ public class ItemListFragment extends Fragment {
 
         }
     }
+
+
+
+
 }

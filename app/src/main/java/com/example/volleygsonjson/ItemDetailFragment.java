@@ -48,14 +48,15 @@ public class ItemDetailFragment extends Fragment {
     /**
      * The placeholder content this fragment is presenting.
      */
-    private PlaceholderContent.PlaceholderItem mItem;
+    //private PlaceholderContent.PlaceholderItem mItem;
+    private VolleyModel mItem;
     private CollapsingToolbarLayout mToolbarLayout;
     private TextView mTextView;
 
     private final View.OnDragListener dragListener = (v, event) -> {
         if (event.getAction() == DragEvent.ACTION_DROP) {
             ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
-            mItem = PlaceholderContent.ITEM_MAP.get(clipDataItem.getText().toString());
+            mItem = VolleyContent.VOLLEY_MAP.get(clipDataItem.getText().toString());
             updateContent();
         }
         return true;
@@ -77,7 +78,7 @@ public class ItemDetailFragment extends Fragment {
             // Load the placeholder content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = PlaceholderContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = VolleyContent.VOLLEY_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -104,11 +105,12 @@ public class ItemDetailFragment extends Fragment {
         binding = null;
     }
 
+    //String intToYearsssss = ((String) mItem.getmYear());
     private void updateContent() {
         if (mItem != null) {
-            mTextView.setText(mItem.details);
+            mTextView.setText(String.valueOf(mItem.getmConsole()));
             if (mToolbarLayout != null) {
-                mToolbarLayout.setTitle(mItem.content);
+                mToolbarLayout.setTitle(mItem.getmName() + " " + String.valueOf(mItem.getmYear()));
             }
         }
         if (testingFab != null)
@@ -117,12 +119,12 @@ public class ItemDetailFragment extends Fragment {
                 @Override
                 public void onClick(View view)
                 {
-                    testAllThatJazzes();
+                    stestAllThatJazzes();
                 }
             });
         }
     }
-    private void testAllThatJazzes() {
+    private void stestAllThatJazzes() {
         String url = "https://api.jsonbin.io/v3/b/5f726a107243cd7e8245d58b";  // THAT should be in a strings.xml file!
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getActivity());
