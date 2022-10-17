@@ -15,12 +15,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.example.volleygsonjson.placeholder.PlaceholderContent;
 import com.example.volleygsonjson.databinding.FragmentItemDetailBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -31,6 +37,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class ItemDetailFragment extends Fragment {
 
     private FloatingActionButton testingFab;
+    //private TextView tvResult;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -83,7 +90,7 @@ public class ItemDetailFragment extends Fragment {
 
         mToolbarLayout = rootView.findViewById(R.id.toolbar_layout);
         mTextView = binding.itemDetail;
-
+        //tvResult = rootView.findViewById(R.id.textViewResults);
         testingFab = rootView.findViewById(R.id.fab);
         // Show the placeholder content as text in a TextView & in the toolbar if available.
         updateContent();
@@ -110,12 +117,51 @@ public class ItemDetailFragment extends Fragment {
                 @Override
                 public void onClick(View view)
                 {
-                    testAllThatJazz();
+                    testAllThatJazzes();
                 }
             });
         }
     }
-    private void testAllThatJazz() {
+    private void testAllThatJazzes() {
+        String url = "https://api.jsonbin.io/v3/b/5f726a107243cd7e8245d58b";  // THAT should be in a strings.xml file!
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response){
+                        try {
+                            JSONObject object = response.getJSONObject("record");
+                            JSONArray jsonArray = object.getJSONArray("gameCompanies");
+                            //mTextView.append(jsonArray.toString());
+                            for(int i = 0; i<jsonArray.length(); i++){
+                                JSONObject gameCompanies = jsonArray.getJSONObject(i);
+
+                                String companyName = gameCompanies.optString("name");
+                                int companyYear = gameCompanies.optInt("year");
+                                String recentConsole = gameCompanies.optString("recentConsole");
+
+                                mTextView.setText(companyName + ", " + String.valueOf(companyYear) + ", " + recentConsole + "\n\n");
+                            }
+                        } catch (JSONException e){
+                            mTextView.setText(e.toString());
+                        }
+                    }
+                }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error){
+                error.printStackTrace();
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(request);
+    }
+
+    //Prof's original
+   /* private void testAllThatJazz() {
         String url = "https://api.jsonbin.io/v3/b/5f726a107243cd7e8245d58b";  // THAT should be in a strings.xml file!
 
         // Instantiate the RequestQueue.
@@ -129,6 +175,7 @@ public class ItemDetailFragment extends Fragment {
                         // Display the response string in our convenient existing text view
                         mTextView.setText("Response is: "+ response);
                         // NEXT, we need to use GSON to turn that JSON into a model
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -141,4 +188,5 @@ public class ItemDetailFragment extends Fragment {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+    */
 }
