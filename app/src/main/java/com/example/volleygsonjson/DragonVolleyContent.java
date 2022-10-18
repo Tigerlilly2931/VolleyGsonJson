@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,58 +28,10 @@ public class DragonVolleyContent {
     public static final Map<String, DragonVolleyModel> VOLLEY_MAP = new HashMap<String, DragonVolleyModel>();
     public static final List<DragonVolleyModel> JSONSTUFFS = new ArrayList<DragonVolleyModel>();
 
-    public String dragon1;
-    public int hp1;
-    public String desc1;
-
-    public List<String> names = new ArrayList<String>();
-    public List<String> years = new ArrayList<String>();
-    public List<String> consoles = new ArrayList<String>();
-
-
     private boolean isBuilt = false;
-
-    public String dragon2;
-    public int hp2;
-    public String desc2;
-
-    public String dragon3;
-    public int hp3;
-    public String desc3;
-
-    public String dragon4;
-    public int hp4;
-    public String desc4;
-
-    public String dragon5;
-    public int hp5;
-    public String desc5;
-
-    public String dragon6;
-    public int hp6;
-    public String desc6;
-
     private boolean haveIt = false;
     public boolean doneLoaded = false;
 
-    public List<DragonVolleyModel> createVolleyStuff(){
-
-        DragonVolleyModel thing1 = new DragonVolleyModel(dragon1, hp1, desc1);
-        DragonVolleyModel thing2 = new DragonVolleyModel(dragon2,hp2, desc2);
-        DragonVolleyModel thing3 = new DragonVolleyModel(dragon3, hp3, desc3);
-        DragonVolleyModel thing4 = new DragonVolleyModel(dragon4, hp4, desc4);
-        DragonVolleyModel thing5 = new DragonVolleyModel(dragon5, hp5, desc5);
-        DragonVolleyModel thing6 = new DragonVolleyModel(dragon6, hp6, desc6);
-        JSONSTUFFS.clear();
-        VOLLEY_MAP.clear();
-        addVolleyToList(thing1);
-        addVolleyToList(thing2);
-        addVolleyToList(thing3);
-        addVolleyToList(thing4);
-        addVolleyToList(thing5);
-        addVolleyToList(thing6);
-        return JSONSTUFFS;
-    }
 
     private void addVolleyToList(DragonVolleyModel volleyThing){
         if(JSONSTUFFS.size() != 0 ){
@@ -110,59 +63,15 @@ public class DragonVolleyContent {
                         try {
                             JSONObject object = response.getJSONObject("record");
                             JSONArray jsonArray = object.getJSONArray("dragons");
+                            JSONSTUFFS.clear();
+                            VOLLEY_MAP.clear();
                             //mTextView.append(jsonArray.toString());
                             for(int i = 0; i<jsonArray.length(); i++){
                                 JSONObject gameCompanies = jsonArray.getJSONObject(i);
-
-                                String dragonType = gameCompanies.optString("type");
-                                int dragonHP = gameCompanies.optInt("hp");
-                                String dragonDescription = gameCompanies.optString("description");
-
-                                //mTextView.setText(dragonType + ", " + String.valueOf(dragonHP) + ", " + dragonDescription + "\n\n");
-                                String inttoStr = String.valueOf(dragonHP);
-                                //volleyContent.names.add(dragonType);
-                                //volleyContent.years.add(inttoStr);
-                                //volleyContent.consoles.add(dragonDescription);
-
-                                switch(i){
-                                    case 0:
-                                        dragon1 = dragonType;
-                                        hp1 = dragonHP;
-                                        desc1 = dragonDescription;
-                                        break;
-
-                                    case 1:
-                                        dragon2 = dragonType;
-                                        hp2 = dragonHP;
-                                        desc2 = dragonDescription;
-                                        break;
-
-                                    case 2:
-                                        dragon3 = dragonType;
-                                        hp3 = dragonHP;
-                                        desc3 = dragonDescription;
-                                        break;
-
-                                    case 3:
-                                        dragon4 = dragonType;
-                                        hp4 = dragonHP;
-                                        desc4 = dragonDescription;
-                                        break;
-
-                                    case 4:
-                                        dragon5 = dragonType;
-                                        hp5 = dragonHP;
-                                        desc5 = dragonDescription;
-                                        break;
-
-                                    case 5:
-                                        dragon6 = dragonType;
-                                        hp6 = dragonHP;
-                                        desc6 = dragonDescription;
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                String jsonHolder = String.valueOf(gameCompanies);
+                                Gson gson = new Gson();
+                                DragonVolleyModel DVM = gson.fromJson(jsonHolder, DragonVolleyModel.class);
+                                addVolleyToList(DVM);
                             }
 
                             //startActivity(ItemListFragment.super.getActivity().getIntent());

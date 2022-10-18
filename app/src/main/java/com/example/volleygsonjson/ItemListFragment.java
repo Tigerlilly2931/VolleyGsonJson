@@ -112,7 +112,6 @@ public class ItemListFragment extends Fragment {
     ) {
 
         dragonVolleyContent.testAllThatJazzes(getActivity());
-        dragonVolleyContent.createVolleyStuff();
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
                 dragonVolleyContent.JSONSTUFFS,
                 itemDetailFragmentContainer
@@ -180,7 +179,7 @@ public class ItemListFragment extends Fragment {
                 } else {
                     Navigation.findNavController(itemView).navigate(R.id.show_item_detail, arguments);
                 }
-                clear();
+                //clear();
             });
 
 
