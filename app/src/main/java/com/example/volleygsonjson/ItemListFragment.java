@@ -50,6 +50,7 @@ import java.util.List;
 public class ItemListFragment extends Fragment {
 
     ProgressBar pgB;
+    View whiteBox;
 
 
     //Resources res = this.getResources();
@@ -97,6 +98,7 @@ public class ItemListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         pgB = view.findViewById(R.id.progressBar);
+        whiteBox = view.findViewById(R.id.rectangle_at_the_top);
         if(!volleyContent.doneLoaded){
             volleyContent.doneLoaded = true;
             new Handler().postDelayed(new Runnable() {
@@ -104,12 +106,14 @@ public class ItemListFragment extends Fragment {
                 public void run()
                 {
                     pgB.setVisibility(View.GONE);
+                    whiteBox.setVisibility(View.GONE);
                 }
-            }, 5500);
+            }, 6000);
 
         }
         else{
             pgB.setVisibility(View.GONE);
+            whiteBox.setVisibility(View.GONE);
         }
 
         //ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
@@ -173,7 +177,7 @@ public class ItemListFragment extends Fragment {
         public void onBindViewHolder(final ViewHolder holder, int position) {
             //holder.volleyItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getmName());
-            //holder.mContentView.setText(mValues.get(position).getmConsole());
+            holder.mContentView.setText(String.valueOf(mValues.get(position).getmYear()) + "  ");
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(itemView -> {
