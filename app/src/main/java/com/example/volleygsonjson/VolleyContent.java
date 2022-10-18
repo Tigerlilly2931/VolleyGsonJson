@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +28,12 @@ public class VolleyContent {
     public static final Map<String, VolleyModel> VOLLEY_MAP = new HashMap<String, VolleyModel>();
     public static final List<VolleyModel> JSONSTUFFS = new ArrayList<VolleyModel>();
 
-    public String cname1;
+    private boolean BuiltDammit = false;
+
+    private boolean haveIt = false;
+    public boolean doneLoaded = false;
+
+    /**public String cname1;
     public int cyear1;
     public String cconsole1;
 
@@ -36,7 +42,7 @@ public class VolleyContent {
     public List<String> consoles = new ArrayList<String>();
 
 
-    private boolean BuiltDammit = false;
+
 
     public String cname2;
     public int cyear2;
@@ -58,8 +64,7 @@ public class VolleyContent {
     public int cyear6;
     public String cconsole6;
 
-    private boolean haveIt = false;
-    public boolean doneLoaded = false;
+
 
     public List<VolleyModel> createVolleyStuff(){
 
@@ -69,8 +74,7 @@ public class VolleyContent {
         VolleyModel thing4 = new VolleyModel(cname4, cyear4, cconsole4);
         VolleyModel thing5 = new VolleyModel(cname5, cyear5, cconsole5);
         VolleyModel thing6 = new VolleyModel(cname6, cyear6, cconsole6);
-        JSONSTUFFS.clear();
-        VOLLEY_MAP.clear();
+
         addVolleyToList(thing1);
         addVolleyToList(thing2);
         addVolleyToList(thing3);
@@ -78,7 +82,7 @@ public class VolleyContent {
         addVolleyToList(thing5);
         addVolleyToList(thing6);
         return JSONSTUFFS;
-    }
+    }*/
 
     private void addVolleyToList(VolleyModel volleyThing){
         if(JSONSTUFFS.size() != 0 ){
@@ -110,11 +114,18 @@ public class VolleyContent {
                         try {
                             JSONObject object = response.getJSONObject("record");
                             JSONArray jsonArray = object.getJSONArray("gameCompanies");
+                            JSONSTUFFS.clear();
+                            VOLLEY_MAP.clear();
                             //mTextView.append(jsonArray.toString());
                             for(int i = 0; i<jsonArray.length(); i++){
                                 JSONObject gameCompanies = jsonArray.getJSONObject(i);
 
-                                String companyName = gameCompanies.optString("name");
+                                String jboyson = String.valueOf(gameCompanies);
+                                Gson gboyson = new Gson();
+                                VolleyModel vModel = gboyson.fromJson(jboyson, VolleyModel.class);
+                                addVolleyToList(vModel);
+
+                                /**String companyName = gameCompanies.optString("name");
                                 int companyYear = gameCompanies.optInt("year");
                                 String recentConsole = gameCompanies.optString("recentConsole");
 
@@ -166,7 +177,7 @@ public class VolleyContent {
 
                                 //volleyContent.cname1 = name1;
                                 //volleyContent.cyear1 = year1;
-                                //volleyContent.cconsole1 = con1;
+                                //volleyContent.cconsole1 = con1;*/
                             }
 
                             //startActivity(ItemListFragment.super.getActivity().getIntent());

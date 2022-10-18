@@ -1,10 +1,15 @@
 package com.example.volleygsonjson;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class VolleyModel {
 
+    @SerializedName("name")
     private String mName;
+    @SerializedName("year")
     private int mYear;
+    @SerializedName("recentConsole")
     private String mConsole;
 
 

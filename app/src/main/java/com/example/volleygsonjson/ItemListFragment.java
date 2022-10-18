@@ -53,6 +53,7 @@ public class ItemListFragment extends Fragment {
     View whiteBox;
 
 
+
     //Resources res = this.getResources();
 
     /**
@@ -133,7 +134,6 @@ public class ItemListFragment extends Fragment {
     ) {
 
         volleyContent.testAllThatJazzes(getActivity());
-        volleyContent.createVolleyStuff();
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
                 volleyContent.JSONSTUFFS,
                 itemDetailFragmentContainer
@@ -189,7 +189,7 @@ public class ItemListFragment extends Fragment {
                 } else {
                     Navigation.findNavController(itemView).navigate(R.id.show_item_detail, arguments);
                 }
-                clear();
+                //clear();
             });
 
 
