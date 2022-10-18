@@ -119,7 +119,7 @@ public class ItemDetailFragment extends Fragment {
                 @Override
                 public void onClick(View view)
                 {
-                    stestAllThatJazzes();
+
                 }
             });
         }

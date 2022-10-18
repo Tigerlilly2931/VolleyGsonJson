@@ -59,6 +59,7 @@ public class VolleyContent {
     public String cconsole6;
 
     private boolean haveIt = false;
+    public boolean doneLoaded = false;
 
     public List<VolleyModel> createVolleyStuff(){
 
@@ -96,7 +97,7 @@ public class VolleyContent {
         }
     }
     public void testAllThatJazzes(Activity activity) {
-        String url = "https://api.jsonbin.io/v3/b/5f726a107243cd7e8245d58b";
+        String url = res.getString(R.string.url);
         //String url = res.getString(R.string.url);  // THAT should be in a strings.xml file!
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(activity);

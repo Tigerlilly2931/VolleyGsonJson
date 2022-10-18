@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,9 @@ import java.util.List;
  * item details side-by-side using two vertical panes.
  */
 public class ItemListFragment extends Fragment {
+
+    ProgressBar pgB;
+
 
     //Resources res = this.getResources();
 
@@ -92,6 +96,21 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        pgB = view.findViewById(R.id.progressBar);
+        if(!volleyContent.doneLoaded){
+            volleyContent.doneLoaded = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run()
+                {
+                    pgB.setVisibility(View.GONE);
+                }
+            }, 5500);
+
+        }
+        else{
+            pgB.setVisibility(View.GONE);
+        }
 
         //ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
 
