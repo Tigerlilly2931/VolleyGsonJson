@@ -107,10 +107,13 @@ public class ItemDetailFragment extends Fragment {
 
     //String intToYearsssss = ((String) mItem.getmYear());
     private void updateContent() {
+
         if (mItem != null) {
             mTextView.setText(String.valueOf(mItem.getmConsole()));
             if (mToolbarLayout != null) {
-                mToolbarLayout.setTitle(mItem.getmName() + " " + String.valueOf(mItem.getmYear()));
+                String strHold = mItem.getmName();
+                String parsingUpper = strHold.substring(0,1).toUpperCase() + strHold.substring(1);
+                mToolbarLayout.setTitle(parsingUpper + " Dragon   HP: " + String.valueOf(mItem.getmYear()));
             }
         }
         if (testingFab != null)

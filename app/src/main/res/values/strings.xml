@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">VolleyGsonJson</string>
     <string name="title_item_detail">Item Detail</string>
-    <string name="url">https://api.jsonbin.io/v3/b/5f726a107243cd7e8245d58b</string>
+    <string name="url">https://api.jsonbin.io/v3/b/634e11a82b3499323be22fc7</string>
 </resources>

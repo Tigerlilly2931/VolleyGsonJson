@@ -50,6 +50,7 @@ import java.util.List;
 public class ItemListFragment extends Fragment {
 
     ProgressBar pgB;
+    View whiteBar;
 
 
     //Resources res = this.getResources();
@@ -97,6 +98,7 @@ public class ItemListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         pgB = view.findViewById(R.id.progressBar);
+        whiteBar = view.findViewById(R.id.rectangle_at_the_top);
         if(!volleyContent.doneLoaded){
             volleyContent.doneLoaded = true;
             new Handler().postDelayed(new Runnable() {
@@ -104,12 +106,14 @@ public class ItemListFragment extends Fragment {
                 public void run()
                 {
                     pgB.setVisibility(View.GONE);
+                    whiteBar.setVisibility(View.GONE);
                 }
-            }, 5500);
+            }, 6000);
 
         }
         else{
             pgB.setVisibility(View.GONE);
+            whiteBar.setVisibility(View.GONE);
         }
 
         //ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat);
@@ -172,8 +176,20 @@ public class ItemListFragment extends Fragment {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             //holder.volleyItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).getmName());
-            //holder.mContentView.setText(mValues.get(position).getmConsole());
+
+            String strHolder = mValues.get(position).getmName();
+            String parsingUpper;
+            if(strHolder == null){
+                parsingUpper = strHolder;
+                holder.mIdView.setText(parsingUpper + " dragon");
+            }
+            else{
+                parsingUpper = strHolder.substring(0,1).toUpperCase() + strHolder.substring(1);
+                holder.mIdView.setText(parsingUpper + " Dragon");
+            }
+
+
+            holder.mContentView.setText("  HP: " + String.valueOf(mValues.get(position).getmYear()));
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(itemView -> {
