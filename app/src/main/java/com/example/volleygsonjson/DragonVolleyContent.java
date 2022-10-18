@@ -20,12 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VolleyContent {
+public class DragonVolleyContent {
     Context context = App.getContext();
     Resources res = context.getResources();
 
-    public static final Map<String, VolleyModel> VOLLEY_MAP = new HashMap<String, VolleyModel>();
-    public static final List<VolleyModel> JSONSTUFFS = new ArrayList<VolleyModel>();
+    public static final Map<String, DragonVolleyModel> VOLLEY_MAP = new HashMap<String, DragonVolleyModel>();
+    public static final List<DragonVolleyModel> JSONSTUFFS = new ArrayList<DragonVolleyModel>();
 
     public String dragon1;
     public int hp1;
@@ -61,14 +61,14 @@ public class VolleyContent {
     private boolean haveIt = false;
     public boolean doneLoaded = false;
 
-    public List<VolleyModel> createVolleyStuff(){
+    public List<DragonVolleyModel> createVolleyStuff(){
 
-        VolleyModel thing1 = new VolleyModel(dragon1, hp1, desc1);
-        VolleyModel thing2 = new VolleyModel(dragon2,hp2, desc2);
-        VolleyModel thing3 = new VolleyModel(dragon3, hp3, desc3);
-        VolleyModel thing4 = new VolleyModel(dragon4, hp4, desc4);
-        VolleyModel thing5 = new VolleyModel(dragon5, hp5, desc5);
-        VolleyModel thing6 = new VolleyModel(dragon6, hp6, desc6);
+        DragonVolleyModel thing1 = new DragonVolleyModel(dragon1, hp1, desc1);
+        DragonVolleyModel thing2 = new DragonVolleyModel(dragon2,hp2, desc2);
+        DragonVolleyModel thing3 = new DragonVolleyModel(dragon3, hp3, desc3);
+        DragonVolleyModel thing4 = new DragonVolleyModel(dragon4, hp4, desc4);
+        DragonVolleyModel thing5 = new DragonVolleyModel(dragon5, hp5, desc5);
+        DragonVolleyModel thing6 = new DragonVolleyModel(dragon6, hp6, desc6);
         JSONSTUFFS.clear();
         VOLLEY_MAP.clear();
         addVolleyToList(thing1);
@@ -80,7 +80,7 @@ public class VolleyContent {
         return JSONSTUFFS;
     }
 
-    private void addVolleyToList(VolleyModel volleyThing){
+    private void addVolleyToList(DragonVolleyModel volleyThing){
         if(JSONSTUFFS.size() != 0 ){
             for(int i = 0; i<JSONSTUFFS.size(); i++){
                 if(JSONSTUFFS.get(i) == volleyThing){

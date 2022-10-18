@@ -1,41 +1,20 @@
 package com.example.volleygsonjson;
 
-import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipDescription;
-import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.volleygsonjson.databinding.FragmentItemListBinding;
 import com.example.volleygsonjson.databinding.ItemListContentBinding;
-
-import com.example.volleygsonjson.placeholder.PlaceholderContent;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -83,7 +62,7 @@ public class ItemListFragment extends Fragment {
     private FragmentItemListBinding binding;
 
     //need to make a new java class that handles the construction of the things
-    private static VolleyContent volleyContent = new VolleyContent();
+    private static DragonVolleyContent dragonVolleyContent = new DragonVolleyContent();
 
 
     @Override
@@ -99,8 +78,8 @@ public class ItemListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         pgB = view.findViewById(R.id.progressBar);
         whiteBar = view.findViewById(R.id.rectangle_at_the_top);
-        if(!volleyContent.doneLoaded){
-            volleyContent.doneLoaded = true;
+        if(!dragonVolleyContent.doneLoaded){
+            dragonVolleyContent.doneLoaded = true;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run()
@@ -132,10 +111,10 @@ public class ItemListFragment extends Fragment {
             View itemDetailFragmentContainer
     ) {
 
-        volleyContent.testAllThatJazzes(getActivity());
-        volleyContent.createVolleyStuff();
+        dragonVolleyContent.testAllThatJazzes(getActivity());
+        dragonVolleyContent.createVolleyStuff();
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
-                volleyContent.JSONSTUFFS,
+                dragonVolleyContent.JSONSTUFFS,
                 itemDetailFragmentContainer
         ));
     }
@@ -149,7 +128,7 @@ public class ItemListFragment extends Fragment {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<VolleyModel> mValues;
+        private final List<DragonVolleyModel> mValues;
         private final View mItemDetailFragmentContainer;
 
         public void clear(){
@@ -158,7 +137,7 @@ public class ItemListFragment extends Fragment {
             notifyItemRangeRemoved(0, size);
         }
 
-        SimpleItemRecyclerViewAdapter(List<VolleyModel> items,
+        SimpleItemRecyclerViewAdapter(List<DragonVolleyModel> items,
                                       View itemDetailFragmentContainer) {
             mValues = items;
             mItemDetailFragmentContainer = itemDetailFragmentContainer;

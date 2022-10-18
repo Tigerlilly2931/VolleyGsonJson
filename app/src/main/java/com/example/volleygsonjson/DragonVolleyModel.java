@@ -1,14 +1,14 @@
 package com.example.volleygsonjson;
 
 
-public class VolleyModel {
+public class DragonVolleyModel {
 
     private String mName;
     private int mYear;
     private String mConsole;
 
 
-    public VolleyModel(final String mName, final int mYear, final String mConsole){
+    public DragonVolleyModel(final String mName, final int mYear, final String mConsole){
         setmName(mName);
         setmYear(mYear);
         setmConsole(mConsole);

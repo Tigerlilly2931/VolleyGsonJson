@@ -16,13 +16,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.example.volleygsonjson.placeholder.PlaceholderContent;
 import com.example.volleygsonjson.databinding.FragmentItemDetailBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,14 +46,14 @@ public class ItemDetailFragment extends Fragment {
      * The placeholder content this fragment is presenting.
      */
     //private PlaceholderContent.PlaceholderItem mItem;
-    private VolleyModel mItem;
+    private DragonVolleyModel mItem;
     private CollapsingToolbarLayout mToolbarLayout;
     private TextView mTextView;
 
     private final View.OnDragListener dragListener = (v, event) -> {
         if (event.getAction() == DragEvent.ACTION_DROP) {
             ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
-            mItem = VolleyContent.VOLLEY_MAP.get(clipDataItem.getText().toString());
+            mItem = DragonVolleyContent.VOLLEY_MAP.get(clipDataItem.getText().toString());
             updateContent();
         }
         return true;
@@ -78,7 +75,7 @@ public class ItemDetailFragment extends Fragment {
             // Load the placeholder content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = VolleyContent.VOLLEY_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = DragonVolleyContent.VOLLEY_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
     }
 
